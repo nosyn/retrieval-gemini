@@ -1,0 +1,46 @@
+version: "3.3"
+
+networks:
+  web-network:
+  server-network:
+
+services:
+  # Web Server
+  server:
+    build:
+      context: ./server
+      # Correct the path to your Dockerfile
+      dockerfile: Dockerfile.dev
+    # Important to bind/mount your codebase dir to /app dir for live reload
+    volumes:
+      - ./server:/app
+    networks:
+      - server-network
+    environment:
+      PORT: 4000
+
+  # Web
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    # Important to bind/mount your codebase dir to /app dir for live reload
+    volumes:
+      - ./web:/app
+      - /app/node_modules/. # This line can be comment out if you are not working on MacOS Darwin arm64
+    networks:
+      - web-network
+    environment:
+      PORT: 5173
+
+  # Ingress
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    networks:
+      - web-network
+      - server-network
+    ports:
+      - 8080:8080

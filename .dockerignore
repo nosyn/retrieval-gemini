@@ -1,0 +1,7 @@
+node_modules
+
+# I need to ignore the package-lock.json to make sure I can build on both M1 and Linux platforms. For now, I have not found the workaround for this problem.
+package-lock.json 
+
+# Builds
+dist
